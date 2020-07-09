@@ -1,8 +1,9 @@
 #!/bin/bash
 
 export ARCH=arm64
-export CROSS_COMPILE=../PLATFORM/prebuilts/gcc/linux-x86/aarch64/aarch64-linux-android-4.9/bin/aarch64-linux-android-
-export ANDROID_MAJOR_VERSION=p
+export CROSS_COMPILE="ccache ../toolchain/bin/aarch64-linux-gnu-"
 
 make exynos7570-j4lte_defconfig
-make -j64
+make exynos7570-j4lte_mea_open_02.dtb
+./tools/dtbtool arch/arm64/boot/dts/ -o arch/arm64/boot/dtb
+make -j$(nproc --all)

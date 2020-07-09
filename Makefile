@@ -408,7 +408,6 @@ KBUILD_CFLAGS   := -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs \
 		   -fno-strict-aliasing -fno-common \
 		   -Werror-implicit-function-declaration \
 		   -Wno-format-security \
-		   -Werror \
 		   -std=gnu89
 
 KBUILD_AFLAGS_KERNEL :=
@@ -485,26 +484,15 @@ ifeq ($(PROJECT_NAME), j4lte)
 endif
 endif
 
-ifneq ($(PLATFORM_VERSION), )
-PLATFORM_VERSION_NUMBER=$(shell $(CONFIG_SHELL) $(srctree)/scripts/android-version.sh $(PLATFORM_VERSION))
-MAJOR_VERSION=$(shell $(CONFIG_SHELL) $(srctree)/scripts/android-major-version.sh $(PLATFORM_VERSION))
+export PLATFORM_VERSION=9
+export PLATFORM_VERSION_NUMBER=90000
+export MAJOR_VERSION=p
 export ANDROID_VERSION=$(PLATFORM_VERSION_NUMBER)
 export ANDROID_MAJOR_VERSION=$(MAJOR_VERSION)
 KBUILD_CFLAGS += -DANDROID_VERSION=$(PLATFORM_VERSION_NUMBER)
 KBUILD_CFLAGS += -DANDROID_MAJOR_VERSION=$(MAJOR_VERSION)
-# Example
-#SELINUX_DIR=$(shell $(CONFIG_SHELL) $(srctree)/scripts/find_matching_major.sh "$(srctree)" "security/selinux" "$(ANDROID_MAJOR_VERSION)")
-else
-export ANDROID_VERSION=990000
-KBUILD_CFLAGS += -DANDROID_VERSION=990000
-endif
 PHONY += replace_dirs
 replace_dirs:
-ifneq ($(PLATFORM_VERSION), )
-# Example
-	@echo "skip replace selinux"
-#	$(Q)$(CONFIG_SHELL) $(srctree)/scripts/replace_dir.sh "$(srctree)" "security/selinux" "$(SELINUX_DIR)"
-endif
 # To make sure we do not include .config for any of the *config targets
 # catch them early, and hand them over to scripts/kconfig/Makefile
 # It is allowed to specify more targets when calling make, including
